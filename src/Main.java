@@ -6,6 +6,8 @@ public class Main {
 
     public static void main(String[] args) {
         LeetCode leetCode = new LeetCode();
-        System.out.println(leetCode.addDigits(567657));
+        int[] test = new int[]{0};
+        leetCode.moveZeroes(test);
+        System.out.println(test);
     }
 }

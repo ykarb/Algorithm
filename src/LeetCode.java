@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class LeetCode {
@@ -32,7 +33,7 @@ public class LeetCode {
     }
 
     public List<List<Integer>> threeSum(int[] nums) {// No. 15
-
+        return new ArrayList<>();
     }
 
     public int myAtoi(String str) {// No. 8
@@ -40,10 +41,10 @@ public class LeetCode {
     }
 
     public ListNode reverseList(ListNode head) { // No. 206
-        if(head == null || head.next == null) return head;
+        if (head == null || head.next == null) return head;
         ListNode pre = null;
         ListNode pro;
-        while(head != null){
+        while (head != null) {
             pro = head.next;
             head.next = pre;
             pre = head;
@@ -53,6 +54,24 @@ public class LeetCode {
     }
 
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {//No. 160
+        return new ListNode(5);
+    }
 
+    public void moveZeroes(int[] nums) {// No. 258, also we can do with two for loop
+        if (nums.length == 0) return;
+        int count = 0;
+        int index = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                nums[index] = nums[i];
+                index++;
+            } else count++;
+        }
+
+        while (count > 0) {
+            nums[nums.length - count] = 0;
+            count--;
+        }
     }
 }
+
