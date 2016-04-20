@@ -73,5 +73,9 @@ public class LeetCode {
             count--;
         }
     }
+
+    public int reverseInteger(int x) {// No. 7
+        return 0;
+    }
 }
 
