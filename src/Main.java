@@ -1,13 +1,12 @@
-import java.util.Arrays;
-
 public class Main {
 
-
-
     public static void main(String[] args) {
-        LeetCode leetCode = new LeetCode();
-        int[] test = new int[]{0};
-        leetCode.moveZeroes(test);
-        System.out.println(test);
+        YaserHashLinkedList yaserHash = new YaserHashLinkedList(10);
+        yaserHash.put("Yaser",90);
+        yaserHash.put("Yaser",9088);
+        yaserHash.put("Yasor",900);
+        yaserHash.put("Forroz",100);
+
+        System.out.println(yaserHash.getValue("Yaser"));
     }
 }
