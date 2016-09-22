@@ -2,6 +2,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+/*
+For test add this to main:
+YaserHashLinkedList yaserHash = new YaserHashLinkedList(10);
+        yaserHash.put("Yaser",90);
+        yaserHash.put("Yaser",9088);
+        yaserHash.put("Yasor",900);
+        yaserHash.put("Forroz",100);
+
+        System.out.println(yaserHash.getValue("Yaser"));
+ */
+
 class HashData{
     public String key;
     public int value;

@@ -75,7 +75,23 @@ public class LeetCode {
     }
 
     public int reverseInteger(int x) {// No. 7
-        return 0;
+
+        int reverse = 0;
+        int tempReverse = 0;
+        int remainder;
+        int sign = 1;
+        if(x < 0) sign = -1;
+        x = Math.abs(x);
+        while(x > 0){
+            remainder = x % 10;
+            reverse = remainder + reverse * 10;
+
+            if((reverse - remainder)/10 != tempReverse) return 0;
+
+            tempReverse = reverse;
+            x = x / 10;
+        }
+        return reverse * sign;
     }
 }
 
