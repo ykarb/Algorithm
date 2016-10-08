@@ -80,18 +80,111 @@ public class LeetCode {
         int tempReverse = 0;
         int remainder;
         int sign = 1;
-        if(x < 0) sign = -1;
+        if (x < 0) sign = -1;
         x = Math.abs(x);
-        while(x > 0){
+        while (x > 0) {
             remainder = x % 10;
             reverse = remainder + reverse * 10;
 
-            if((reverse - remainder)/10 != tempReverse) return 0;
+            if ((reverse - remainder) / 10 != tempReverse) return 0;
 
             tempReverse = reverse;
             x = x / 10;
         }
         return reverse * sign;
     }
+
+    public int[] twoSum(int[] nums, int target) { //No. 1
+        int Indexi = -1, Indexj = -1;
+        for (int i = 0; i < nums.length; i++) {
+            int remainder = target - nums[i];
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[j] == remainder) {
+                    Indexi = i;
+                    Indexj = j;
+                    break;
+                }
+            }
+        }
+        int[] result = {Indexi, Indexj};
+        return result;
+    }
+
+    public ListNode addTwoNumbersWithIntegerLimitationProblem(ListNode l1, ListNode l2) { // No.2... it has the problem cannot add two big integer.
+
+        if (l1 == null && l2 == null) return null;
+        if (l1 == null) return l2;
+        else if (l2 == null) return l1;
+
+        int sum = getNumber(l1) + getNumber(l2);
+
+        return getList(sum);
+    }
+
+    public ListNode getList(int number) {
+
+        ListNode runner = new ListNode(number % 10);
+        ListNode head = runner;
+        number = number / 10;
+
+        while (number > 0) {
+            ListNode temp = new ListNode(number % 10);
+            number = number / 10;
+            runner.next = temp;
+            runner = temp;
+        }
+
+        return head;
+    }
+
+    public int getNumber(ListNode list) {
+        int number = 0;
+        int multiplier = 1;
+        while (list != null) {
+            number = (list.val * multiplier) + number;
+            multiplier = multiplier * 10;
+            list = list.next;
+        }
+
+        return number;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) { // No.2
+        return null;
+    }
+
+    public String convert(String s, int numRows) { // No. 6
+        if (numRows == 1) return s;
+        String result[] = new String[numRows];
+        for (int i = 0; i < numRows; i++) {
+            result[i] = "";
+        }
+        int rows = 0;
+        boolean reverse = false;
+        for (int i = 0; i < s.length(); i++) {
+            if (!reverse) {
+                result[rows] = result[rows] + s.charAt(i);
+                rows++;
+            } else {
+                result[rows] = result[rows] + s.charAt(i);
+                rows--;
+            }
+
+            if (rows == numRows) {
+                reverse = !reverse;
+                rows = rows - 2;
+                if (rows < 0) rows = 0;
+            } else if (rows < 0) {
+                reverse = !reverse;
+                rows = rows + 2;
+            }
+        }
+        String sentence = "";
+        for (int i = 0; i < numRows; i++) {
+            sentence = sentence + result[i];
+        }
+        return sentence;
+    }
+
 }
 
