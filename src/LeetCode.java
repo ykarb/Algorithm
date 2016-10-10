@@ -186,5 +186,132 @@ public class LeetCode {
         return sentence;
     }
 
+    public boolean isPalindrome(int x) { // No .9
+        String temp = Integer.toString(x);
+        for (int i = 0; i < temp.length(); i++) {
+            if (temp.charAt(i) != temp.charAt(temp.length() - i - 1))
+                return false;
+        }
+        return true;
+
+        /* it another approach which is really nice
+   compare half of the digits in x, so don't need to deal with overflow.
+
+   public boolean isPalindrome(int x) {
+    if (x<0 || (x!=0 && x%10==0)) return false;
+    int rev = 0;
+    while (x>rev){
+    	rev = rev*10 + x%10;
+    	x = x/10;
+    }
+    return (x==rev || x==rev/10);
+    }*/
+
+    }
+
+    public int atoi(String s) {
+        return 0;
+    }
+
+    public String intToRoman(int num) { // No. 12
+
+         /* beautiful answer :
+        public static String intToRoman(int num) {
+    String M[] = {"", "M", "MM", "MMM"};
+    String C[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+    String X[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+    String I[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+    return M[num/1000] + C[(num%1000)/100] + X[(num%100)/10] + I[num%10];
+}
+        */
+        String result = "";
+        while (num > 0) {
+            if (num / 1000 > 0) {
+                int x = num / 1000;
+                for (int i = 0; i < x; i++) {
+                    result = "M" + result;
+                }
+                num = num - x * 1000;
+            } else if (num / 500 > 0) {
+                if (num >= 900) {
+                    result = result + "CM";
+                    num = num - 900;
+                    result = result + intToRoman(num);
+                    num = 0;
+                } else {
+                    result = result + "D";
+                    num = num - 500;
+                    result = result + intToRoman(num);
+                    num = 0;
+                }
+            } else if (num / 100 > 0) {
+                if (num >= 400) {
+                    result = result + "CD";
+                    num = num - 400;
+                    result = result + intToRoman(num);
+                    num = 0;
+                } else {
+                    int x = num / 100;
+                    for (int i = 0; i < x; i++) {
+                        result = result + "C";
+                    }
+                    num = num - x * 100;
+                    result = result + intToRoman(num);
+                    num = 0;
+                }
+            } else if (num / 50 > 0) {
+                if (num >= 90) {
+                    result = result + "XC";
+                    num = num - 90;
+                    result = result + intToRoman(num);
+                    num = 0;
+                } else {
+                    result = result + "L";
+                    num = num - 50;
+                    result = result + intToRoman(num);
+                    num = 0;
+                }
+            } else if (num / 10 > 0) {
+                if (num >= 40) {
+                    result = result + "XL";
+                    num = num - 40;
+                    result = result + intToRoman(num);
+                    num = 0;
+                } else {
+                    int x = num / 10;
+                    for (int i = 0; i < x; i++) {
+                        result = result + "X";
+                    }
+                    num = num - x * 10;
+                    result = result + intToRoman(num);
+                    num = 0;
+                }
+            } else if (num / 5 > 0) {
+                if (num >= 9) {
+                    result = result + "IX";
+                    num = num - 9;
+                    result = result + intToRoman(num);
+                    num = 0;
+                } else {
+                    result = result + "V";
+                    num = num - 5;
+                    result = result + intToRoman(num);
+                    num = 0;
+                }
+            } else if (num >= 4) {
+                result = result + "IV";
+                num = num - 4;
+                result = result + intToRoman(num);
+                num = 0;
+            } else {
+                for (int i = 0; i < num; i++) {
+                    result = result + "I";
+                }
+                num = 0;
+            }
+        }
+        return result;
+    }
+
 }
 
