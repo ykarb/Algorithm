@@ -1,4 +1,6 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LeetCode {
@@ -30,10 +32,6 @@ public class LeetCode {
         if (num == 0) return 0;
         else if (num % 9 == 0) return 9;
         else return num % 9;
-    }
-
-    public List<List<Integer>> threeSum(int[] nums) {// No. 15
-        return new ArrayList<>();
     }
 
     public int myAtoi(String str) {// No. 8
@@ -313,5 +311,172 @@ public class LeetCode {
         return result;
     }
 
+    public int romanToInt(String s) { // No. 13
+
+        char[] romanCharacters = s.toCharArray();
+
+        int number = 0;
+        boolean twoChar = false;
+        for (int i = 0; i < romanCharacters.length; i++) {
+            twoChar = false;
+
+            if (i < (romanCharacters.length - 1)) {
+
+                String temp = Character.toString(romanCharacters[i]) +
+                        Character.toString(romanCharacters[i + 1]);
+                switch (temp) {
+                    case "IV":
+                        number = number + 4;
+                        i++;
+                        twoChar = true;
+                        break;
+                    case "IX":
+                        number = number + 9;
+                        i++;
+                        twoChar = true;
+                        break;
+                    case "XL":
+                        number = number + 40;
+                        i++;
+                        twoChar = true;
+                        break;
+                    case "XC":
+                        number = number + 90;
+                        i++;
+                        twoChar = true;
+                        break;
+                    case "CD":
+                        number = number + 400;
+                        i++;
+                        twoChar = true;
+                        break;
+                    case "CM":
+                        number = number + 900;
+                        i++;
+                        twoChar = true;
+                        break;
+                }
+            }
+            if (!twoChar)
+                switch (romanCharacters[i]) {
+                    case 'M':
+                        number = number + 1000;
+                        break;
+                    case 'D':
+                        number = number + 500;
+                        break;
+                    case 'C':
+                        number = number + 100;
+                        break;
+                    case 'L':
+                        number = number + 50;
+                        break;
+                    case 'X':
+                        number = number + 10;
+                        break;
+                    case 'V':
+                        number = number + 5;
+                        break;
+                    case 'I':
+                        number = number + 1;
+                        break;
+                    default:
+                        System.out.print("Wrong Character");
+                        return 0;
+                }
+        }
+        return number;
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) { // No. 15
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums.length < 3) return result;
+        Arrays.sort(nums);
+        int i = 0;
+        while (i < nums.length - 2) {
+            if (nums[i] > 0) break;
+            int j = i + 1;
+            int k = nums.length - 1;
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+                if (sum == 0) result.add(Arrays.asList(nums[i], nums[j], nums[k]));
+
+                //Avoid Duplicates
+                if (sum <= 0) while (nums[j] == nums[++j] && j < k) ;
+
+                //Avoid Duplicates
+                if (sum >= 0) while (nums[k--] == nums[k] && j < k) ;
+            }
+            while (nums[i] == nums[++i] && i < nums.length - 2) ;
+            //Avoid Duplicates
+        }
+        return result;
+    }
+
+    public int threeSumClosest(int[] nums, int target) { // No .16
+
+        if (nums.length < 3) {
+            int sum = 0;
+            for (int j = 0; j < nums.length; j++) {
+                sum = sum + nums[j];
+            }
+            return sum;
+        }
+
+        Arrays.sort(nums);
+        int ans = nums[0] + nums[1] + nums[2];
+        for (int i = 0; i < nums.length - 2; i++) {
+            int k = i + 1;
+            int last = nums.length - 1;
+            while (k < last) {
+                int sum = nums[i] + nums[k] + nums[last];
+                if (sum == target) return sum;
+                if (Math.abs(target - sum) < Math.abs(target -ans)) ans = sum;
+                if (sum > target) last--;
+                else k++;
+            }
+        }
+        return ans;
+    }
+
+    public ListNode swapPairs(ListNode head) { // No. 24
+        if(head == null) return null;
+        else if(head.next == null) return head;
+
+        ListNode nextPair = head;
+        head = nextPair.next;
+
+        while(nextPair != null && nextPair.next != null){
+            ListNode first = nextPair;
+            ListNode second = first.next;
+            nextPair = second.next;
+            if(nextPair == null)first.next = null;
+            else if(nextPair.next == null) first.next = nextPair;
+            else first.next = nextPair.next;
+            second.next = first;
+        }
+
+        return head;
+    }
+
+    public boolean isValid(String s) { // No . 20
+        if(s.length() == 0) return true;
+        if(s.length() == 1) return false;
+
+        if(s.charAt(0) == ')' || s.charAt(0) == '}' || s.charAt(0) == ']') return false;
+
+        if ((s.charAt(0) == '(' && s.charAt(1) == ')') ||
+                (s.charAt(0) == '[' && s.charAt(1) == ']') ||
+                (s.charAt(0) == '{' && s.charAt(1) == '}'))
+            if(s.length() > 2)return isValid(s.substring(2));
+            else return true;
+
+        else if (s.charAt(0) == '(' && s.charAt(s.length() -1) == ')')return isValid(s.substring(1, s.length()-1));
+        else if (s.charAt(0) == '[' && s.charAt(s.length() -1) == ']')return isValid(s.substring(1, s.length()-1));
+        else if (s.charAt(0) == '{' && s.charAt(s.length() -1) == '}')return isValid(s.substring(1, s.length()-1));
+
+        return false;
+
+    }
 }
 
