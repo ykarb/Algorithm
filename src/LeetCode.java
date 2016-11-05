@@ -1,7 +1,4 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class LeetCode {
 
@@ -477,6 +474,98 @@ public class LeetCode {
 
         return false;
 
+    }
+
+    public List<String> generateParenthesis(int n) {
+
+        if (n == 1) return Arrays.asList("()");
+
+        List<String> result = generateParenthesis(n-1);
+
+        List<String> Final = new ArrayList<String>();
+        //for(Iterator<String> L = result.iterator(); L.hasNext();){
+        for(String L : result){
+            String s = "(" + L + ")";
+            Final.add(s);
+            s = L + "()";
+            if(!Final.contains(s)) Final.add(s);
+            s = "()" + L;
+            if(!Final.contains(s)) Final.add(s);
+        }
+        return Final;
+    }
+
+    public int strStr(String haystack, String needle) {
+        if (haystack.length() == 0 && needle.length() == 0) return 0;
+        if (haystack.length() != 0 && needle.length() == 0) return 0;
+        if (haystack.length() == 0 && needle.length() != 0) return -1;
+        if (haystack.length() == needle.length())
+            if (haystack.equals(needle)) return 0;
+            else return -1;
+        for(int i = 0; i < haystack.length(); i++){
+            if(i + needle.length() < haystack.length())
+                if(haystack.substring(i, i + needle.length()).equals(needle)) return i;
+        }
+        return -1;
+    }
+
+    public void printPostOrder(BTNode root){
+        if(root == null) return;
+        if(root.left != null) printPostOrder(root.left);
+        if(root.right != null) printPostOrder(root.right);
+        System.out.print(root.val + ", ");
+    }
+
+    public void printPreOrder(BTNode root){
+        if(root == null) return;
+        System.out.print(root.val + ", ");
+        if(root.left != null) printPreOrder(root.left);
+        if(root.right != null) printPreOrder(root.right);
+
+    }
+
+    public void printInOrder(BTNode root){
+        if(root == null) return;
+        if(root.left != null) printInOrder(root.left);
+        System.out.print(root.val + ", ");
+        if(root.right != null) printInOrder(root.right);
+    }
+
+    public void depthFirstSearch(BTNode root, char key){
+    // traverse in Pre order
+        Stack<BTNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            BTNode current = stack.pop();
+            if(!current.visited){
+                if(current.val == key){
+                    System.out.println("Found the key " + key);
+                    return;
+                }
+                current.visited = true;
+                System.out.println("visited " + current.val + " ,");
+                if(current.right != null )stack.push(current.right);
+                if(current.left != null )stack.push(current.left);
+            }
+        }
+    }
+
+    public void breadthFirstSearch(BTNode root, char key){
+        LinkedList<BTNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()){
+            BTNode current = queue.poll();
+            if(!current.visited){
+                if(current.val == key){
+                    System.out.println("Found the key " + key);
+                    return;
+                }
+                current.visited = true;
+                System.out.println("visited "+ current.val + " ,");
+                if(current.right != null && !current.right.visited )queue.add(current.right);
+                if(current.left != null && !current.left.visited) queue.add(current.left);
+            }
+        }
     }
 }
 
