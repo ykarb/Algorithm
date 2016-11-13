@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 public class Main {
 
 
@@ -19,6 +22,7 @@ public class Main {
         G.right = I;
         I.left = H;
 
-        leetCode.breadthFirstSearch(F, 'H');
+        ArrayList<LinkedList<BTNode>> result =  leetCode.createListForEachLevel(F);
+        System.out.println("end");
         }
     }

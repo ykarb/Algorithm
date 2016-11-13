@@ -567,5 +567,38 @@ public class LeetCode {
             }
         }
     }
+
+    public BTNode createMinimalBST(char[] array){
+        return createMinimalBST(array, 0, array.length - 1);
+    }
+
+    public BTNode createMinimalBST(char[] array, int start, int end){
+        if(end > start) return null;
+        int middle = (start + end) / 2;
+        BTNode root = new BTNode(array[middle]);
+        root.left = createMinimalBST(array, start, middle -1);
+        root.right = createMinimalBST(array, middle + 1, end);
+        return root;
+    }
+
+    public ArrayList<LinkedList<BTNode>> createListForEachLevel(BTNode root){
+        ArrayList<LinkedList<BTNode>> result = new ArrayList<>();
+        LinkedList<BTNode> current = new LinkedList<>();
+        if(root == null) return result;
+        current.add(root);
+
+        while(current.size() > 0){
+            result.add(current);
+            LinkedList<BTNode> parents = current;
+            current = new LinkedList<>();
+            for(BTNode parent:parents){
+                if(parent.left != null)current.add(parent.left);
+                if(parent.right != null) current.add(parent.right);
+            }
+        }
+        return result;
+    }
+
+
 }
 
