@@ -510,6 +510,34 @@ public class LeetCode {
     }
 
     public void printPostOrder(BTNode root){
+
+        /*
+        For example of trees copy this to the main
+
+        BTNode F = new BTNode('F');
+        BTNode B = new BTNode('B');
+        BTNode G = new BTNode('G');
+        F.left = B; F.right = G;
+        BTNode A = new BTNode('A');
+        BTNode D = new BTNode('D');
+        B.left = A; B.right = D;
+        BTNode C = new BTNode('C');
+        BTNode E = new BTNode('E');
+        D.left = C; D.right = E;
+        BTNode I = new BTNode('I');
+        BTNode H = new BTNode('H');
+        G.right = I;
+        I.left = H;
+
+        Set<ArrayList<Integer>> yaser= new HashSet<>();
+        yaser.add(new ArrayList<>(Arrays.asList(1 ,2, 3)));
+        yaser.add(new ArrayList<>(Arrays.asList(1 ,2, 4)));
+
+        ArrayList<LinkedList<BTNode>> result =  leetCode.createListForEachLevel(F);
+        System.out.println("end");
+        */
+
+
         if(root == null) return;
         if(root.left != null) printPostOrder(root.left);
         if(root.right != null) printPostOrder(root.right);
@@ -599,6 +627,395 @@ public class LeetCode {
         return result;
     }
 
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> rep = new HashMap();
+        for(int  i = 0; i < nums.length; i++){
+            if(rep.containsKey(nums[i])){
+                rep.put(nums[i], rep.get(nums[i])+1);
+            }else
+                rep.put(nums[i], 1);
+        }
+
+        PriorityQueue<myNode> ordered = new PriorityQueue<>();
+        for(Map.Entry<Integer, Integer> entry:rep.entrySet()){
+            myNode tmp = new myNode(entry.getKey(), entry.getValue());
+            ordered.add(tmp);
+        }
+
+        Integer[] res = new Integer[k];
+        int  i =0;
+        while(i < k){
+            res[i] = ordered.poll().index;
+            i++;
+        }
+
+        return Arrays.asList(res);
+    }
+
+    class myNode implements Comparable<myNode>{
+        int val;
+        int index;
+        public myNode(int theIndex, int theValue){
+            val = theValue;
+            index = theIndex;
+        }
+
+        @Override
+        public int compareTo(myNode that){
+            return that.val - val;
+        }
+    }
+
+    public ListNode insertionSortList(ListNode head) {
+
+        if( head == null ){
+            return head;
+        }
+
+        ListNode helper = new ListNode(0); //new starter of the sorted list
+        ListNode cur = head; //the node will be inserted
+        ListNode pre = helper; //insert node between pre and pre.next
+        ListNode next = null; //the next node will be inserted
+        //not the end of input list
+        while( cur != null ){
+            next = cur.next;
+            //find the right place to insert
+            while( pre.next != null && pre.next.val < cur.val ){
+                pre = pre.next;
+            }
+            //insert between pre and pre.next
+            cur.next = pre.next;
+            pre.next = cur;
+            pre = helper;
+            cur = next;
+        }
+
+        return helper.next;
+    }
+
+    public int pathSum(TreeNode root, int sum) {
+
+        ArrayList<Integer> allSums = new ArrayList();
+        //allSums.add(0);
+        allSums.add(root.val);
+
+        int count;
+        if(root.val == sum) count = 1;
+        else count = 0;
+
+
+        return count + helper(root.left, allSums, sum)+ helper(root.right, allSums, sum);
+
+    }
+
+    public int helper(TreeNode node, ArrayList<Integer> allNodes, int sum){
+
+        if(node == null) return 0;
+        //allNodes.add(node.val);
+        int count = calAllPath(allNodes, node.val, sum);
+        allNodes.add(node.val);
+        count += helper(node.left, allNodes, sum);
+        count += helper(node.right, allNodes, sum);
+        allNodes.remove(allNodes.size()-1);
+
+        return count;
+    }
+
+    public int calAllPath(ArrayList<Integer> all, int self, int sum){
+        int count = 0;
+        if(self == sum)count++;
+        for(int i = 0; i <= all.size()-1; i++){
+            int sumo = self;
+            for(int j = i; j <= all.size()-1; j++){
+                sumo += all.get(j);
+            }
+            if(sumo == sum)count++;
+        }
+
+        return count;
+    }
+
+    public String serialize(TreeNode root) {
+
+        Stack<TreeNode> stack = new Stack();
+        stack.push(root);
+        StringBuilder s = new StringBuilder("");
+
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            if(node == null)s.append("null,");
+            else {
+                s.append(String.valueOf(node.val+ ","));
+                stack.push(node.right);
+                stack.push(node.left);
+            }
+        }
+
+        return s.toString();
+    }
+
+    public TreeNode search(TreeNode root, int key){
+        if(root == null) return null;
+        if(root.val == key) return root;
+        if(key <= root.val) return search(root.left, key);
+        else return search(root.right, key);
+    }
+
+    public List<Integer> ladderLength(String beginWord, String endWord, Set<String> wordList) { // No. 127
+        if(beginWord.length()!= endWord.length()) return new ArrayList();
+        ArrayList<Integer> list = new ArrayList();
+        int count = 0;
+        Set<String> visited = new HashSet();
+        visited.add(beginWord);
+        changeWord(beginWord, endWord, count, list, wordList, visited);
+
+        return list;
+    }
+
+    public void changeWord(String beginWord, String endWord, int count, ArrayList<Integer> list,
+                           Set<String> wordList, Set<String> visited){
+        for(int i = 0; i < beginWord.length();i++){
+            char[] word = beginWord.toCharArray();
+            for(char c ='a'; c<='z';c++){
+                char old = word[i];
+                word[i] = c;
+                String tmp = new String(word);
+                if(tmp.equals(endWord))
+                    list.add(count+1);
+                else if(wordList.contains(tmp) && !visited.contains(tmp)) {
+                    visited.add(tmp);
+                    changeWord(tmp, endWord, count + 1, list, wordList, visited);
+                }
+            }
+        }
+    }
+
+    public List<List<String>> findAllLadders(String beginWord, String endWord, Set<String> wordList) {
+        //No. 126.. final aal word paths
+        List<List<String>> allPath = new ArrayList();
+        List<String> list = new ArrayList();
+        list.add(beginWord);
+        wordList.remove(beginWord);
+        findWord(beginWord, endWord, allPath, list, wordList);
+
+        return allPath;
+    }
+
+    public void findWord(String begin, String end, List<List<String>> allPath, List<String> list, Set<String> wordList) {
+
+        for (int i = 0; i < begin.length(); i++) {
+            char[] word = begin.toCharArray();
+            for (char c = 'a'; c <= 'z'; c++) {
+                word[i] = c;
+                String newWord = new String(word);
+                if (newWord.equals(end)) {
+                    list.add(newWord);
+                    allPath.add(new ArrayList(list));
+                    list.remove(list.size() - 1);
+                    break;
+                } else if (wordList.contains(newWord)) {
+                    list.add(newWord);
+                    wordList.remove(newWord);
+                    findWord(newWord, end, allPath, list, wordList);
+                    list.remove(list.size() - 1);
+
+                }
+            }
+        }
+    }
+
+    public List<String> findAllConcatenatedWordsInADict(String[] words) {
+        Set<String> dic = new HashSet();
+        List<String> res = new ArrayList();
+        for(String s:words){
+            dic.add(s);
+        }
+        for(String s:words){
+            if (find(s, dic))
+                res.add(s);
+        }
+
+        return res;
+
+    }
+
+    public boolean find(String word, Set<String> dic){
+
+        for(int i =0; i < word.length()-1;i++) {
+            if(dic.contains(word.substring(0,i+1)) && dic.contains(word.substring(i+1)))
+                return true;
+            else if(dic.contains(word.substring(0,i+1)))
+                if(find(word.substring(i+1), dic))
+                    return true;
+            /*else if(dic.contains(word.substring(i+1)))*/
+
+        }
+        return false;
+    }
+
+    public boolean wordBreak(String s, Set<String> wordDict) {
+        if(s.length() == 0) return false;
+        HashSet<String> not = new HashSet();
+
+        findword(s, wordDict, not);
+
+        if(not.size()==0)
+            return true;
+        else
+            return false;
+    }
+
+    public void findword(String s, Set<String> wordDict, Set<String> not){
+        if(wordDict.contains(s))return;
+        if(not.contains(s))return;
+        for(int i = 0; i < s.length();i++){
+            if(wordDict.contains(s.substring(0,i+1)) && wordDict.contains(s.substring(i+1)))
+                return;
+            else if(wordDict.contains(s.substring(0,i+1))){
+                findword(s.substring(i+1), wordDict, not);
+                if(not.size()==0)
+                    return;
+            }
+        }
+
+        not.add(s);
+        return;
+    }
+
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        List<List<Integer>> all = new ArrayList();
+
+        for(int i = 0 ; i < nums.length; i++){
+            List<List<Integer>> tmp = new ArrayList(all);
+            for(int j = 0; j < all.size(); j++){
+                List<Integer> tmpList= tmp.get(j);
+                if(isDivisibale(nums[i], tmpList)){
+                    //all.remove(j);
+                    tmpList.add(nums[i]);
+                    tmp.add(tmpList);
+                }
+            }
+            tmp.add(new ArrayList(Arrays.asList(nums[i])));
+            all = tmp;
+        }
+
+        System.out.println(all.size());
+        return maxList(all);
+    }
+
+    public List<Integer> maxList(List<List<Integer>> list){
+        int len = Integer.MIN_VALUE;
+        int maxIndex = 0;
+        for(int  i = 0 ; i < list.size(); i++){
+            if(list.get(i).size() > len){
+                len = list.get(i).size();
+                maxIndex = i;
+            }
+        }
+
+        return list.get(maxIndex);
+    }
+
+    public boolean isDivisibale(int num, List<Integer> list){
+        for(int i = 0;i < list.size(); i++){
+            if(!(num % list.get(i) == 0) && !(list.get(i) % num == 0))
+                return false;
+        }
+
+        return true;
+    }
+
+    public void reorderList(ListNode head) {
+        if(head == null || head.next == null) return;
+        ListNode fast = head.next;
+        ListNode slow = head;
+
+        while(fast.next.next != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode reverseHead = reverseList(slow.next);
+        ListNode fakeHead = head;
+
+        while(fakeHead.next!=null && reverseHead.next!=null){
+            ListNode tmp = fakeHead.next;
+            fakeHead.next = reverseHead;
+            ListNode tmpRev = reverseHead.next;
+            reverseHead.next = tmp;
+
+            fakeHead = tmp;
+            reverseHead = tmpRev;
+        }
+
+    }
+
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        HashMap<Integer, Integer> leastHeights = new HashMap();
+
+        ArrayList[] graph = new ArrayList[n];
+
+        for(int i = 0 ; i < n ; i++){
+            graph[i] = new ArrayList();
+        }
+
+        for(int i = 0; i < edges.length;i++){
+            graph[edges[i][0]].add(edges[i][1]);
+            graph[edges[i][1]].add(edges[i][0]);
+        }
+
+        int minAll = Integer.MAX_VALUE;
+        int[][] allMax = new int[n][n];
+        for(int i = 0; i <n ; i++){
+            Arrays.fill(allMax[i], -1);
+        }
+
+        for(int i =0; i < n; i++){
+
+            int min = Integer.MIN_VALUE;
+            for(int j = 0; j < graph[i].size();j++){
+                int h = 0;
+                if(allMax[i][(int)graph[i].get(j)] == -1)
+                    h = 1 + getMaxHeight(graph, i, (int)graph[i].get(j), allMax);
+                else
+                    h = allMax[i][(int)graph[i].get(j)];
+
+                min = Math.max(min, h);
+            }
+
+            minAll = Math.min(minAll, min);
+            leastHeights.put(i, min);
+        }
+
+        List<Integer> res = new ArrayList();
+        for(Map.Entry<Integer, Integer> map: leastHeights.entrySet()){
+            if(map.getValue() == minAll){
+                res.add(map.getKey());
+            }
+        }
+
+        return res;
+
+    }
+
+    public int getMaxHeight(ArrayList[] graph, int parent, int child, int[][] allMax){
+
+        int max = Integer.MIN_VALUE;
+        for(int i = 0 ; i < graph[child].size(); i++){
+            if((int)graph[child].get(i)!=parent){
+                int h = 0;
+                if(allMax[child][(int)graph[child].get(i)] == -1){
+                    h = 1 + getMaxHeight(graph, child, (int)graph[child].get(i), allMax);
+                    allMax[child][(int)graph[child].get(i)] = h;
+                }
+                else
+                    h = allMax[child][(int)graph[child].get(i)];
+
+                max = Math.max(max, h);
+            }
+        }
+        return (max == Integer.MIN_VALUE) ? 0 : max;
+    }
 
 }
 
