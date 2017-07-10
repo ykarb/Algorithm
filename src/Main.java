@@ -1,26 +1,20 @@
-import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Main {
 
     public static void main(String[] args) {
-        LeetCode leetCode = new LeetCode();
+        CrackingInterview ci = new CrackingInterview();
+        TreeNodeLR root = new TreeNodeLR(8);
+        TreeNodeLR left = new TreeNodeLR(4);
+        TreeNodeLR leftleft = new TreeNodeLR(2);
+        TreeNodeLR leftright = new TreeNodeLR(5);
+        left.left = leftleft;
+        left.right = leftright;
+        TreeNodeLR right = new TreeNodeLR(12);
+        root.left = left;
+        root.right = right;
 
-        try {
-            FileWriter write = new FileWriter("Yaser.txt", true);
-            BufferedWriter bw = new BufferedWriter(write);
-
-            bw.write("Hello");
-            bw.close();
-
-            FileReader fr = new FileReader("Yaser.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String line = br.readLine();
-            System.out.println(line.charAt(0));
-
-        }catch(IOException ex){
-            ex.printStackTrace();
-        }
-
+        TreeNodeLR result = ci.firstCommonAncestor(root, leftleft, leftright);
         }
     }
