@@ -1,5 +1,6 @@
 import org.w3c.dom.ls.LSInput;
 import sun.awt.image.ImageWatched;
+import sun.java2d.loops.GraphicsPrimitive;
 import sun.reflect.generics.tree.Tree;
 
 import java.util.*;
@@ -678,80 +679,276 @@ public class CrackingInterview {
 
     }*/
 
-    public TreeNodeLR firstCommonAncestor(TreeNodeLR root, TreeNodeLR nodeA, TreeNodeLR nodeB){
-        // we assume all nodes initialized correctly
-        //set left and right boolean flag using DFS
-        check(root, nodeA, nodeB);
+    public TreeNode firstCommonAncestor(TreeNode root, TreeNode nodeA, TreeNode nodeB){
+        ResultCommon result = firstCommonAncestorHelper(root, nodeA, nodeB);
 
-        return getFirstCommon(root);
+        if(result.ancestor)
+            return result.res;
+        else
+            return null;
     }
 
-    private TreeNodeLR getFirstCommon(TreeNodeLR root){
-        if((root.firstInLeft && root.secInRight)||(root.secInLeft && root.firstInRight))
-            return root;
+    public ResultCommon firstCommonAncestorHelper(TreeNode root, TreeNode nodeA, TreeNode nodeB){
+        if(root == null)
+            return new ResultCommon(null, false);
 
-        if(root.firstInLeft && root.secInLeft)
-            return getFirstCommon(root.left);
+        if(root == nodeA && root ==nodeB)
+            return new ResultCommon(root, true);
 
-        if(root.firstInRight && root.secInRight)
-        return getFirstCommon(root.right);
+        ResultCommon X = firstCommonAncestorHelper(root.left, nodeA, nodeB);
+        if(X.ancestor)
+            return X;
+        ResultCommon Y = firstCommonAncestorHelper(root.right, nodeA, nodeB);
+        if(Y.ancestor)
+            return Y;
+
+        if(X.res != null && Y.res != null)
+            return new ResultCommon(root, true);
+        else if(root == nodeA || root ==nodeB){
+            boolean flag = (X.res != null || Y.res != null);
+            return new ResultCommon(root, flag);
+        }else{
+            return new ResultCommon(X.res != null ? X.res : Y.res, false);
+        }
+    }
+
+    public ArrayList<ArrayList<Integer>> BSTSequence(TreeNode head){// problem 4.9
+        return new ArrayList<>();
+    }
+
+    public boolean checkSubtree(TreeNode T1, TreeNode T2){// problem 4.10
+        ArrayList<Integer> T2PreOrder = makePreOrder(T2);
+
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(T1);
+        int index = 0;
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            if(node.val == T2PreOrder.get(index)) {
+                index++;
+                if (index == T2PreOrder.size())
+                    return true;
+            }else
+                index = 0;
+
+            if(node.left != null)
+                stack.push(node.left);
+            else
+                stack.push(new TreeNode(-1));
+
+            if(node.right != null)
+                stack.push(node.right);
+            else
+                stack.push(new TreeNode(-1));
+        }
+        return false;
+    }
+
+    public ArrayList<Integer> makePreOrder(TreeNode root){ // with -1 for nulls
+        Stack<TreeNode> stack = new Stack<>();
+        if(root == null)
+            return new ArrayList<>();
+
+        stack.push(root);
+        ArrayList<Integer> result = new ArrayList<>();
+
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            result.add(node.val);
+            if(node.left != null)
+                stack.push(node.left);
+            else
+                stack.push(new TreeNode(-1));
+
+            if(node.right != null)
+                stack.push(node.right);
+            else
+                stack.push(new TreeNode(-1));
+        }
+
+        return result;
+    }
+
+    public void insertBST(TreeNode bstRoot, int num){
+        if(num < bstRoot.val) {
+            if (bstRoot.left == null)
+                bstRoot.left = new TreeNode(num);
+            else
+                insertBST(bstRoot.left, num);
+        }
+        else {
+            if (bstRoot.right == null)
+                bstRoot.right = new TreeNode(num);
+            else
+                insertBST(bstRoot.right, num);
+        }
+    }
+
+    public TreeNode findBST(TreeNode bstRoot, int num){
+        if(bstRoot.val == num)
+            return bstRoot;
+        else if(num < bstRoot.val && bstRoot.left != null)
+            findBST(bstRoot.left, num);
+        else if(bstRoot.right != null)
+            findBST(bstRoot.right, num);
 
         return null;
     }
 
-    public TreeNodeLR check(TreeNodeLR root, TreeNodeLR nodeA, TreeNodeLR nodeB){ // dosent work
-        if(root.left == nodeA)
-            root.firstInLeft = true;
-        if(root.right == nodeA)
-            root.firstInRight = true;
-
-        if(root.left == nodeB)
-            root.secInLeft = true;
-        if(root.right == nodeB)
-            root.secInRight = true;
-
-        if(root.firstInLeft && root.secInRight){
-            TreeNodeLR temp = new TreeNodeLR(-1);
-            temp.firstInLeft = true;
-            temp.secInRight = true;
-            return temp;
-        }
-
-
-        if(root.secInLeft && root.firstInRight) {
-            TreeNodeLR temp = new TreeNodeLR(-1);
-            temp.secInLeft = true;
-            temp.firstInRight = true;
-            return temp;
-        }
-
-        if(root == nodeA){
-            root.firstInLeft = root.firstInRight = root.secInRight = root.secInLeft = true;
-            return root;
-        }
-
-        if(root == nodeB){
-            root.firstInLeft = root.firstInRight = root.secInRight = root.secInLeft = true;
-            return root;
-        }
-
-        if(root.left != null) {
-            TreeNodeLR res= check(root.left, nodeA, nodeB);
-            if(res.firstInRight) root.firstInRight = true;
-            if(res.firstInLeft) root.firstInLeft = true;
-            if(res.secInRight) root.secInRight = true;
-            if(res.secInLeft) root.secInLeft = true;
-        }
-        if(root.right != null) {
-            TreeNodeLR res= check(root.right, nodeA, nodeB);
-            if(res.firstInRight) root.firstInRight = true;
-            if(res.firstInLeft) root.firstInLeft = true;
-            if(res.secInRight) root.secInRight = true;
-            if(res.secInLeft) root.secInLeft = true;
-        }
-
-        return root;
+    public boolean deleteBSTRoot(TreeNode root, int num){
+        if(root.val == num){
+            if(root.left != null && hasNoChild(root.left)){
+                swapValue(root, root.left);
+                root.left = null;
+                return true;
+            }else if(root.right != null && hasNoChild(root.right)){
+                swapValue(root, root.right);
+                root.right = null;
+                return true;
+            }else{
+                TreeNode dummy = new TreeNode(-1);
+                dummy.left = root;
+                return deleteBST(dummy, num);
+            }
+        }else
+            return deleteBST(root, num);
     }
 
+    public boolean deleteBST(TreeNode bstRoot, int num){
+        if(bstRoot.left != null){
+            if(bstRoot.left.val == num){
+                if(hasNoChild(bstRoot.left)){
+                    bstRoot.left = null;
+                    return true;
+                }else {
+                    deleteNodeBST(bstRoot.left);
+                    return true;
+                }
+            }else{
+                return deleteBST(bstRoot.left, num);
+            }
+        }else if(bstRoot.right != null) {
+            if (bstRoot.right.val == num) {
+                if (hasNoChild(bstRoot.right)) {
+                    bstRoot.right = null;
+                    return true;
+                } else {
+                    deleteNodeBST(bstRoot.right);
+                    return true;
+                }
+            } else {
+                return deleteBST(bstRoot.right, num);
+            }
+        }else
+            return false;
+    }
 
-}
+    public TreeNode getRandomNode(){return new TreeNode(0);}
+
+    private void deleteNodeBST(TreeNode node){
+        if(node.left!=null){
+            if (hasNoChild(node.left)){
+                swapValue(node, node.left);
+                node.left = null;
+                return;
+            }else{
+                swapValue(node, node.left);
+                deleteNodeBST(node.left);
+            }
+        }
+        else if(node.right!=null){
+            if (hasNoChild(node.right)){
+                swapValue(node, node.right);
+                node.right = null;
+                return;
+            }else{
+                swapValue(node, node.right);
+                deleteNodeBST(node.right);
+            }
+        }
+    }
+
+    private boolean hasNoChild(TreeNode node){
+        if(node.left == null && node.right == null)
+            return true;
+        else
+        return false;
+    }
+
+    private void swapValue(TreeNode first, TreeNode second){
+        int temp = first.val;
+        first.val = second.val;
+        second.val = temp;
+    }
+
+    public int pathsWithSum(TreeNode root, int target){
+        HashMap<Integer, Integer> map = new HashMap<>();
+        return pathsWithSumHelper(root, map, target, 0);
+    }
+
+    private int pathsWithSumHelper(TreeNode node, HashMap<Integer, Integer> map,
+                                   int target, int runningSum){
+
+        runningSum += node.val;
+        int totalPaths = 0;
+        if(runningSum == target)
+            totalPaths++;
+        int keyLookUp = runningSum - target;
+
+        if(map.containsKey(keyLookUp))
+            totalPaths += map.get(keyLookUp);
+
+        if(map.containsKey(runningSum))
+            map.put(runningSum, map.get(runningSum)+1);
+        else
+            map.put(runningSum, 1);
+
+        if(node.left != null)
+            totalPaths += pathsWithSumHelper(node.left, map, target, runningSum);
+
+        if(node.right != null)
+            totalPaths += pathsWithSumHelper(node.right, map, target, runningSum);
+
+        if(map.get(runningSum)-1 == 0)
+            map.remove(runningSum);
+        else
+            map.put(runningSum, map.get(runningSum));
+
+        return totalPaths;
+    }
+
+    public int bitInsertion(int a, int b, int i, int j){ //5.1 insert b from bit i through j in a
+        int mask = ((1 << i)-1) | (~((1 << j)-1));
+        System.out.println(Integer.toBinaryString(mask));
+        a = mask & a;
+        System.out.println(Integer.toBinaryString(a));
+        a = (b<<i) | a;
+        System.out.println(Integer.toBinaryString(a));
+
+        return a;
+    }
+
+    public String binaryRealNumber(double a){// a is between 0 and 1
+        StringBuilder res = new StringBuilder("0.");
+        int power = -1;
+        while(res.length() < 35 && a > 0){
+            if(a - Math.pow(2, power) >= 0){
+                res.append('1');
+                a = a - Math.pow(2, power);
+                power--;
+            }else{
+                res.append('0');
+                power--;
+            }
+        }
+
+        if(a == 0)
+            return res.toString();
+        else
+            return "ERROR";
+    }
+
+    public int flipBitToWin(int num){return 0;}//5.3
+
+    public int[] nextNumber(int num){}
+ }
