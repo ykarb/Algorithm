@@ -1,3 +1,5 @@
+package Interview;
+
 public class ThreeStack {
     int[] mem;
     int[] head;

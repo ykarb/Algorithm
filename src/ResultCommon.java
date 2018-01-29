@@ -1,3 +1,5 @@
+package Interview;
+
 public class ResultCommon {
     TreeNode res;
     boolean ancestor;

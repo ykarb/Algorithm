@@ -1,10 +1,12 @@
+package Interview;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
 /*
 For test add this to main:
-YaserHashLinkedList yaserHash = new YaserHashLinkedList(10);
+Interview.YaserHashLinkedList yaserHash = new Interview.YaserHashLinkedList(10);
         yaserHash.put("Yaser",90);
         yaserHash.put("Yaser",9088);
         yaserHash.put("Yasor",900);

@@ -1,7 +1,9 @@
+package Interview;
+
 import java.util.Arrays;
 
 /*
- YaserStringBuffer stringBuffer = new YaserStringBuffer();
+ Interview.YaserStringBuffer stringBuffer = new Interview.YaserStringBuffer();
         stringBuffer.append("");
         stringBuffer.append("Yaser");
         stringBuffer.append("ForoozForoozForoozForoozForoozForoozForoozForoozForooz");

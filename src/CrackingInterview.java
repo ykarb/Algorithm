@@ -1,9 +1,4 @@
-import org.w3c.dom.ls.LSInput;
-import sun.awt.image.ImageWatched;
-import sun.java2d.loops.GraphicsPrimitive;
-import sun.reflect.generics.tree.Tree;
-
-import javax.xml.transform.sax.SAXTransformerFactory;
+package Interview;
 import java.util.*;
 
 public class CrackingInterview {
@@ -624,17 +619,17 @@ public class CrackingInterview {
             return successorHelper(root.parent);
     }
 
-    /*public Graph makeGraph(ArrayList<Character> list, HashMap<Character, Character> dep){
-        Graph graph = new Graph();
+    /*public Interview.Graph makeGraph(ArrayList<Character> list, HashMap<Character, Character> dep){
+        Interview.Graph graph = new Interview.Graph();
 
         for(Character c:list){
-            graph.addNode(new GNode(c));
+            graph.addNode(new Interview.GNode(c));
         }
-        ArrayList<GNode> nodes = graph.getNodes();
+        ArrayList<Interview.GNode> nodes = graph.getNodes();
         for(Map.Entry entry:dep.entrySet()){
-            GNode nodefirst = null;
-            GNode nodesec = null;
-            for(GNode gnode:nodes){
+            Interview.GNode nodefirst = null;
+            Interview.GNode nodesec = null;
+            for(Interview.GNode gnode:nodes){
                 if(gnode.val == entry.getKey())
                     nodefirst = gnode;
                 if(gnode.val == entry.getValue())
@@ -647,7 +642,7 @@ public class CrackingInterview {
         return graph;
     }*/
 
-    /*public ArrayList<GNode> buildOrder(ArrayList<String> list, HashMap<String, String> dep){
+    /*public ArrayList<Interview.GNode> buildOrder(ArrayList<String> list, HashMap<String, String> dep){
         HashMap<String, ArrayList<String>> graph = new HashMap<>();
         for(String s:list){
             graph.put(s, new ArrayList<>());
@@ -1432,7 +1427,7 @@ public class CrackingInterview {
         return arr.toString();
     }
 
-    public int searchinRotArr(int[] arr, int target){// 10.3 
+    public int searchingRotArr(int[] arr, int target){// 10.3
         return rotArray(arr, target, 0 , arr.length-1);
     }
 
@@ -1467,5 +1462,528 @@ public class CrackingInterview {
                     return rotArray(arr, target, start, mid-1);
             }
         }
+    }
+
+    public int searchListy(Listy list, int target){// 10.4 .. correct that
+        return searchListyHelper(list, target, 0, 1);
+    }
+
+    private int searchListyHelper(Listy list, int target, int start, int end){
+        int mid = (start+end)/2;
+        if(list.elementAt(mid)==target)
+            return mid;
+        if(start > end)
+            return -1;
+
+        if(list.elementAt(mid) > 0){
+            if(target > list.elementAt(mid))
+                return searchListyHelper(list, target, mid, end*2);
+            else{
+                return searchListyHelper(list, target, start, mid-1);
+            }
+        }else{
+            return searchListyHelper(list, target, start, end-start);
+        }
+    }
+
+    public int sparseSearch(String[] strArr, String str){
+        if(str == "")
+            return -1;
+        return sparseSearchHelper(strArr, str, 0, strArr.length-1);
+    }
+
+    private int sparseSearchHelper(String[] strArr, String str, int start, int end){
+        int mid = (start+end)/2;
+        if(strArr[mid] == str)
+            return mid;
+        if(start > end)
+            return -1;
+
+        if(strArr[mid] == ""){
+            int left = mid - 1;
+            int right = mid + 1;
+            while(true){
+                if(left < 0 && right > end)
+                    return -1;
+                else if(end >= right && strArr[right]!="") {
+                    mid = right;
+                    break;
+                }
+                else if(start <= left && strArr[left]!="") {
+                    mid = left;
+                    break;
+                }
+                left++;
+                right++;
+            }
+        }
+
+        if(strArr[mid] == str)
+            return mid;
+
+        if(strArr[mid].compareTo(str) > 0)
+            return sparseSearchHelper(strArr, str, start, mid-1);
+        else
+            return sparseSearchHelper(strArr, str, mid+1, end);
+    }
+
+    public int[] setBit(int[] bitVector, int num){// 10.7
+        int index = num >> 5;
+        int mask = ((1 << 5)-1);
+        int numBit = num & mask;
+
+        bitVector[index] |= (1 << numBit);
+
+        return bitVector;
+    }
+
+    public int[] searchSortedMatrix(int[][] matrix, int target){//10.9
+
+        return searchSortedMatrixHelper(matrix, 0, 0, matrix.length-1, matrix[0].length-1, target);
+    }
+
+    private int[] searchSortedMatrixHelper(int[][] matrix, int rowTL, int colTL, int rowBR, int colBR, int target){
+        return new int[]{1};
+    }
+
+    public void sortValleyPeak(int[] arr){
+        boolean isValley = arr[0] >= arr[1] ? false:true;
+
+        for(int i =1; i < arr.length; i++){
+            if(isValley){
+                if(arr[i] < arr[i-1]){
+                    int temp = arr[i];
+                    arr[i] = arr[i-1];
+                    arr[i-1] = temp;
+                }
+            }else{
+                if(arr[i] > arr[i-1]){
+                    int temp = arr[i];
+                    arr[i] = arr[i-1];
+                    arr[i-1] = temp;
+                }
+            }
+            isValley = !isValley;
+        }
+    }
+
+    public Piece hasWon(TicTacToe boardGame){
+        int rowCount = boardGame.board.length;
+        int colCount = boardGame.board[0].length;
+
+        //check if by any row can win
+        for (int i = 0; i <rowCount;i++) {
+            if(boardGame.board[i][0] == Piece.empty)
+                continue;
+            Piece allShouldBe = boardGame.board[i][0];
+            Piece winner = allShouldBe;
+            for (int j = 1; j < colCount; j++) {
+                if(boardGame.board[i][j] != allShouldBe){
+                    winner = Piece.empty;
+                }
+            }
+            if (winner != Piece.empty)
+                return winner;
+        }
+
+        for (int i = 0; i <colCount;i++) {
+            if(boardGame.board[0][i] == Piece.empty)
+                continue;
+            Piece allShouldBe = boardGame.board[0][i];
+            Piece winner = allShouldBe;
+            for (int j = 1; j < rowCount; j++) {
+                if(boardGame.board[j][i] != allShouldBe){
+                    winner = Piece.empty;
+                }
+            }
+            if (winner != Piece.empty)
+                return winner;
+        }
+
+        if(boardGame.board[0][0] == Piece.empty)
+            return Piece.empty;
+        Piece allShouldBe = boardGame.board[0][0];
+        for (int i = 1; i < rowCount; i++) {
+            if(boardGame.board[i][i] != allShouldBe)
+                break;
+        }
+
+        if(boardGame.board[0][colCount-1] == Piece.empty)
+            return Piece.empty;
+        allShouldBe = boardGame.board[0][colCount-1];
+        for (int i = 1; i < rowCount; i++) {
+            if(boardGame.board[i][colCount-1-i] != allShouldBe)
+                break;
+        }
+
+        return Piece.empty;
+    }
+
+    public int samllestDiff(int[] A, int[] B){
+        Arrays.sort(A);
+        Arrays.sort(B);
+
+        int indexA = 0;
+        int indexB = 0;
+        int diff = 0;
+        while(indexA < A.length-1 && indexB < B.length-1){
+            if(A[indexA] == B[indexB])
+                return 0;
+
+            if(diff < Math.abs(A[indexA]-B[indexB]))
+                diff = Math.abs(A[indexA]-B[indexB]);
+
+            if(A[indexA] < B[indexB])
+                indexA++;
+            else
+               indexB++;
+        }
+        return diff;
+    }
+
+    public int numberMax(int a, int b){
+        int c = a - b;
+        c = c >> 31;
+        return (~c&a)|(c&b);
+    }
+
+    public String mastermind(String guess, String sol){
+        HashMap<Character, Integer> guessMap = new HashMap<>();
+        HashMap<Character, Integer> solMap = new HashMap<>();
+
+        for(int i = 0; i < guess.length(); i++){
+            char c = guess.charAt(i);
+            if(guessMap.containsKey(c)) {
+                int temp = guessMap.get(c);
+                guessMap.put(c, temp+1);
+            }else
+                guessMap.put(c, 1);
+
+            c = sol.charAt(i);
+            if(solMap.containsKey(c)) {
+                int temp = solMap.get(c);
+                solMap.put(c, temp+1);
+            }else
+                solMap.put(c, 1);
+        }
+
+        int hitNum = 0;
+        for(int i = 0; i < guess.length(); i++){
+            if(guess.charAt(i)==sol.charAt(i)){
+                hitNum++;
+                char c = guess.charAt(i);
+                int temp = guessMap.get(c);
+                temp--;
+                if(temp == 0)
+                    guessMap.remove(c);
+                else
+                    guessMap.put(c, temp);
+
+                temp = solMap.get(c);
+                temp--;
+                if(temp == 0)
+                    solMap.remove(c);
+                else
+                    solMap.put(c, temp);
+            }
+        }
+
+        int psuedo = 0;
+        for(int i = 0; i < guess.length(); i++)
+            for (int j = 0; j < sol.length(); j++) {
+                char c = guess.charAt(i);
+                if(guess.charAt(i)==sol.charAt(j) && guessMap.containsKey(c) &&
+                        solMap.containsKey(c)){
+                    psuedo++;
+                    int temp = guessMap.get(c);
+                    temp--;
+                    if(temp == 0)
+                    guessMap.remove(c);
+                    else
+                    guessMap.put(c, temp);
+
+                    temp = solMap.get(c);
+                    temp--;
+                    if(temp == 0)
+                        solMap.remove(c);
+                    else
+                        solMap.put(c, temp);
+                }
+            }
+
+        return hitNum+" hit, "+psuedo+" pesudo";
+    }
+
+    public int[] subsort(int[] arr){
+        int rightInd = 0;
+        for (int i = 1; i < arr.length; i++) {
+            if(arr[i] < arr[i-1]){
+                rightInd = i;
+                break;
+            }
+        }
+        int m = findLess(arr, 0, rightInd-1, arr[rightInd]);
+
+        int leftInd = 0;
+        for (int i = arr.length-2; i >= 0; i--) {
+            if(arr[i] > arr[i+1]){
+                leftInd = i;
+                break;
+            }
+        }
+        int n = findMore(arr, leftInd+1, arr.length-1, arr[leftInd]);
+
+        return new int[]{m, n};
+    }
+
+    public int findMore(int[] arr, int start, int end, int target){
+        int index = 0;
+        for (int i = start; i <= end; i++) {
+            if(arr[i] >= target) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+    public int findLess(int[] arr, int start, int end, int target){
+        int index = 0;
+        for (int i = end; i >= start; i--) {
+            if(arr[i] <= target) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
+    public int contigousSeq(int[] arr){//16.17
+        int[] dp = new int[arr.length];
+        dp[0] = arr[0];
+        int max = 0;
+        for (int i = 1; i < arr.length; i++) {
+            if(diffSign(arr[i-1], arr[i])){
+                if(arr[i]+dp[i-1] > arr[i])
+                    dp[i] = arr[i] + dp[i - 1];
+                else
+                    dp[i] = arr[i];
+            }else
+                dp[i] = arr[i];
+        }
+
+        for(int i:dp)
+            max = Math.max(max, i);
+
+        return max;
+    }
+
+    public boolean diffSign(int a, int b){
+        if(a > 0 && b < 0)
+            return true;
+        else if(a<0 && b > 0)
+            return true;
+        else
+            return false;
+    }
+
+    public ArrayList<Integer> pondSize(int[][] mat){ // 16.19
+        int[][] visited = new int[mat.length][mat[0].length];
+
+        ArrayList<Integer> res = new ArrayList<>();
+        for(int i =0 ;i < mat.length; i++)
+            for (int j = 0; j < mat[0].length; j++) {
+                if(mat[i][j] == 0 && visited[i][j]==0) {
+                    res.add(getPondSize(mat, visited, i, j));
+                }
+            }
+        return res;
+    }
+
+    public int getPondSize(int[][] mat, int[][] visited, int x, int y){
+        int res = 1;
+        visited[x][y] = 1;
+        for (int i = -1; i < 2; i++)
+            for (int j = -1; j < 2; j++) {
+                res += (y+j < mat[0].length && y+j >= 0 &&
+                        x+i < mat.length && x+i >= 0 &&
+                        visited[x+i][y+j]==0 && mat[x+i][y+j]==0) ? getPondSize(mat, visited, x+i ,y+j):0;
+            }
+        return  res;
+    }
+
+    public BiNode convertBST(BiNode root){
+        if(root.left==null && root.right==null)
+            return root;
+        if(root.left!=null){
+            BiNode left = findBiggestOnLeft(root.left);
+            left.right = root;
+            root.left = left;
+        }
+        if(root.right!=null){
+            BiNode right = findSmallestOnRight(root.right);
+            right.left = root;
+            root.right = right;
+        }
+        return findSmallest(root);
+    }
+
+    public BiNode findSmallest(BiNode root){
+        while(root.left != null){
+            root = root.left;
+        }
+        return root;
+    }
+
+    public BiNode findBiggestOnLeft(BiNode root){
+        if(root.left==null && root.right==null)
+            return root;
+        if(root.left!=null){
+            BiNode left = findBiggestOnLeft(root.left);
+            left.right = root;
+            left.left = null;
+            root.left = left;
+        }
+        if(root.right!=null){
+            BiNode right = findSmallestOnRight(root.right);
+            right.left = root;
+            root.right = right;
+        }
+        return root.right;
+    }
+    public BiNode findSmallestOnRight(BiNode root){
+        if(root.left==null && root.right==null)
+            return root;
+        if(root.left!=null){
+            BiNode left = findBiggestOnLeft(root.left);
+            left.right = root;
+            left.left = null;
+            root.left = left;
+        }
+        if(root.right!=null){
+            BiNode right = findSmallestOnRight(root.right);
+            right.left = root;
+            root.right = null;
+        }
+        return root.left;
+    }
+
+    public ListNode swapPairs(ListNode head) {
+
+        ListNode dummy = new ListNode(-1);
+        ListNode headDummy = dummy;
+        ListNode nextHead = null;
+
+        while((head!=null) && (head.next!=null)){
+            //System.out.println(head.val);
+            nextHead = head.next.next;
+            //System.out.println(nextHead.val);
+            headDummy.next = head.next;
+            //System.out.println(headDummy.val);
+            head.next.next = head;
+            head =nextHead;
+
+            headDummy = headDummy.next;
+            //System.out.println(headDummy.val);
+
+            //System.out.println(head.val);
+        }
+
+        return dummy.next;
+    }
+
+    public void heapSort(int[] arr){
+        int heapSize = arr.length;
+        maxHeap(arr);
+        for(int i = 0 ; i < arr.length;i++){
+            int maxAll = arr[0];
+            arr[0] = arr[heapSize-1];
+            arr[heapSize-1] = maxAll;
+            heapSize--;
+            heapify(arr, 0, heapSize);
+        }
+    }
+
+    public void maxHeap(int[] arr){
+        //for(int i = 0; i<=arr.length/2; i++){ // this is wrogn since it violates the assumption that each subtree is  a heap
+        for(int i = arr.length/2; i>=0; i--){
+
+            heapify(arr, i, arr.length);
+        }
+    }
+
+    public void heapify(int[] arr, int parent, int heapSize){
+        int left = parent*2+1;
+        int right = parent*2+2;
+        int max = parent;
+
+        if(left < heapSize && arr[left] > arr[parent])
+            max = left;
+
+        if(right < heapSize && arr[right] > arr[max])
+            max = right;
+
+        if(max!=parent){
+            int tmp = arr[parent];
+            arr[parent] = arr[max];
+            arr[max] = tmp;
+            heapify(arr, max, heapSize);
+        }
+    }
+
+    public void quickSort(int[] arr){
+        quickSort(arr, 0, arr.length-1);
+    }
+    private void quickSort(int[] arr, int low, int hi){
+        if(low >= hi)
+            return;
+
+        int pivotInd = partition(arr, low, hi);
+        //pivotIndex is at its right location in arr
+
+        quickSort(arr, low, pivotInd);
+        quickSort(arr, pivotInd+1, hi);
+
+        /* one way
+        if(low < pivotInd)
+            quickSort(arr, low, pivotInd-1);
+        if(pivotInd < hi)
+            quickSort(arr, pivotInd+1, hi);
+            */
+    }
+    private int partition(int[] arr, int low, int hi){
+        int pivot = arr[hi];
+
+        int  i = low-1;
+        int j = hi+1;
+        while(true){
+            do {
+                j--;
+            }while (arr[j]>pivot);
+
+            do{
+                i++;
+            }
+            while (arr[i] < pivot);
+
+            if(i>=j)
+                return j;
+
+            swap(arr, i, j);
+        }
+        /* using one way partitioning
+        int i  = hi+1;
+        for(int j = hi; j >low; j--){
+            if(arr[j] >= pivot){
+                i--;
+                swap(arr, i, j);
+            }
+        }
+        swap(arr, i-1, low);
+        return i-1;
+        */
+    }
+
+    private void swap(int[] arr, int a, int b){
+        int tmp = arr[a];arr[a] = arr[b]; arr[b] = tmp;
     }
 }

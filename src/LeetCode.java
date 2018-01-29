@@ -1,3 +1,5 @@
+package Interview;
+
 import java.util.*;
 
 public class LeetCode {
@@ -514,18 +516,18 @@ public class LeetCode {
         /*
         For example of trees copy this to the main
 
-        BTNode F = new BTNode('F');
-        BTNode B = new BTNode('B');
-        BTNode G = new BTNode('G');
+        Interview.BTNode F = new Interview.BTNode('F');
+        Interview.BTNode B = new Interview.BTNode('B');
+        Interview.BTNode G = new Interview.BTNode('G');
         F.left = B; F.right = G;
-        BTNode A = new BTNode('A');
-        BTNode D = new BTNode('D');
+        Interview.BTNode A = new Interview.BTNode('A');
+        Interview.BTNode D = new Interview.BTNode('D');
         B.left = A; B.right = D;
-        BTNode C = new BTNode('C');
-        BTNode E = new BTNode('E');
+        Interview.BTNode C = new Interview.BTNode('C');
+        Interview.BTNode E = new Interview.BTNode('E');
         D.left = C; D.right = E;
-        BTNode I = new BTNode('I');
-        BTNode H = new BTNode('H');
+        Interview.BTNode I = new Interview.BTNode('I');
+        Interview.BTNode H = new Interview.BTNode('H');
         G.right = I;
         I.left = H;
 
@@ -533,7 +535,7 @@ public class LeetCode {
         yaser.add(new ArrayList<>(Arrays.asList(1 ,2, 3)));
         yaser.add(new ArrayList<>(Arrays.asList(1 ,2, 4)));
 
-        ArrayList<LinkedList<BTNode>> result =  leetCode.createListForEachLevel(F);
+        ArrayList<LinkedList<Interview.BTNode>> result =  leetCode.createListForEachLevel(F);
         System.out.println("end");
         */
 

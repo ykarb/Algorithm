@@ -1,12 +1,10 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-
+package Interview;
 public class Main {
-
     public static void main(String[] args) {
         CrackingInterview ci = new CrackingInterview();
-        int[] arr = new int[]{15,16,19,20,25,1,3,4,5,7,10,14};
-        int res = ci.searchinRotArr(arr, 19);
+        int[] arr = new int[]{41,43,4,3,443,10000,9,-2,0};
+        ci.heapSort(arr);
+        for(int num:arr)
+            System.out.println(num);
             }
     }
