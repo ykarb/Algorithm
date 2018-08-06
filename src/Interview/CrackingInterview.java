@@ -1986,4 +1986,27 @@ public class CrackingInterview {
     private void swap(int[] arr, int a, int b){
         int tmp = arr[a];arr[a] = arr[b]; arr[b] = tmp;
     }
+
+    public int compCoeff(int n, int k) {// compute coefficient power k in (1+x)^n
+        // assumed n, k >=0 and k <= n
+        ArrayList<Integer> pre = new ArrayList<>();
+        pre.add(0);
+        ArrayList<Integer> next = new ArrayList<>();
+
+        int tmpN = 0;
+        while(tmpN < n){
+            next.add(1);
+            for(int i = 0; i < tmpN; i++)
+                next.add(pre.get(i)+pre.get(i+1));
+            next.add(1);
+
+            pre.clear();
+            pre.addAll(next);
+            next.clear();
+
+            tmpN++;
+        }
+
+        return pre.get(k);
+    }
 }
